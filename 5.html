@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    'use strict';
+   function compare (a,b,c) {
+       let largest = a;
+       let smallest = a;
+       if (b > largest) {
+        largest = b;
+       }
+       if (c > largest) {
+           largest = c;
+       }
+       if (b < smallest) {
+           smallest = b;
+       }
+       if (c < smallest) {
+           smallest = c;
+       }
+       console.log('Найбільше значення', largest)
+       console.log('Найменше значення',smallest)
+   }
+   compare(10,12,29);
+
+   function atleastone (a,b,c) {
+       return a % 2 == 0 || b % 2 == 0 || c % 2 == 0;
+   }
+   console.log(atleastone(10,12,29));
+
+    function checkComplexCondition(a, b, c) {
+        return a > b && b < c;
+    }
+    console.log(checkComplexCondition(10,12,29));
+
+    function isPrime (n) {
+        if (n <= 1) {
+            return false;
+        }
+        if (n <= 3) {
+            return true;
+        }
+        for (let i = 2; i < n; i++) {
+            if (n % i == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+    console.log(isPrime(29));
+</script>
+</body>
+</html>

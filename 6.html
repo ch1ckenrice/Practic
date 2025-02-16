@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    'use strict';
+    let name = prompt('Введіть імʼя','')
+    let birthYear = parseInt(prompt('Введіть рік народження', ''))
+    let city = prompt('Введіть своє місто','')
+    let corentYear = new Date().getFullYear();
+    let age = corentYear - birthYear;
+    let ageGroup;
+    switch (true) {
+        case (age < 13):
+            ageGroup='Дитина';
+            break;
+            case (age < 18):
+                ageGroup = 'Підліток';
+                break;
+                case (age < 60):
+                    ageGroup = 'Дорослий'
+            break;
+                    default:
+                        ageGroup = 'Літня людина'
+    }
+    console.log(`${name} , ви належите до вікової групи: ${ageGroup}`);
+
+    let countryCapital = 'Київ';
+    if (city.toLowerCase() === countryCapital.toLowerCase()) {
+        console.log(`Місто ${city} є столицею`)
+    }
+    else {
+        console.log(`Місто ${city} не є столицею`)
+    }
+</script>
+</body>
+</html>

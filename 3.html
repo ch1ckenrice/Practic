@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+  'use strict'
+  let integer = 10;
+  let float = 3.14;
+  let string = "Привіт, світ!";
+  let boolean = true;
+  console.log('Початкові значення:');
+  console.log(integer);
+  console.log(float);
+  console.log(string);
+  console.log(boolean);
+  integer = 20;
+  float = 2.71;
+  string = "Новий рядок";
+  boolean = false;
+  console.log('Зміненні значення:');
+console.log(integer);
+console.log(float);
+console.log(string);
+console.log(boolean);
+
+let result1 = integer + float;
+console.log(result1, typeof result1);
+let result2 = Number(boolean);
+console.log(result2, typeof result2);
+let result3 = String(float);
+console.log(result3, typeof result3);
+let stringnumber = '123';
+let result4 = Number(stringnumber);
+console.log(result4, typeof result4);
+  let stringtext = 'abc';
+  let result5 = Number(stringtext);
+  console.log(result4, typeof result4);
+
+  const myObject = {
+      name: "Іван",
+      age: 30,
+      isStudent: true,
+      grades: [10, 9, 8],
+      address: {
+          city: "Київ",
+          street: "Хрещатик, 1",
+      },
+  };
+
+  console.log("\nОб'єкт у форматі JSON:");
+  console.log(JSON.stringify(myObject, null, 2));
+</script>
+</body>
+</html>

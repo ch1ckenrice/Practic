@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    'use strict';
+    let a = parseFloat(prompt('Перше число', ''))
+    let b = parseFloat(prompt('Друге число',''))
+    let c = parseFloat(prompt('Третє число',''))
+    if (isNaN(a) || isNaN(b) || isNaN(c)) {
+        console.log('Помилка,введено не вірне значення')
+    }
+    else if (a==null || b==null || c==null) {
+        console.log('Значення не введено')
+    }
+    else {
+    let average = (a + b + c) / 3
+    console.log(average)
+        if (average % 5 === 0) {
+            console.log("Середнє арифметичне ділиться на 5 без залишку.");
+        } else {
+            console.log("Середнє арифметичне не ділиться на 5 без залишку.");
+        }
+    }
+
+
+    let absa = Math.abs(a)
+    console.log("Модуль першого числа:", absa);
+    let ceila = Math.ceil(a)
+    console.log("Округлення першого числа вгору:", ceila);
+    let floora=Math.floor(a)
+    console.log("Округлення першого числа вниз:", floora);
+    let powera = Math.pow(a,2)
+    console.log("Перше число в квадраті:", powera);
+
+    if (a + b > c && a + c > b && b + c > a) {
+        console.log("Трикутник з такими сторонами може існувати.");
+    } else {
+        console.log("Трикутник з такими сторонами не може існувати.");
+    }
+</script>
+</body>
+</html>

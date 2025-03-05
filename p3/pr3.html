@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+  'use strict';
+  //first
+  const numbers = [];
+  for (let i = 0; i < 9; i++) {
+  numbers.push(Math.floor(Math.random() * 100));
+  }
+  console.log('початковий масив',numbers);
+  let avarage = numbers.reduce((a, b) => a + b) / numbers.length;
+  console.log('Середнє арифметичне',avarage);
+
+  let sum = 0
+  for (let i = 0; i < numbers.length; i++) {
+    sum += numbers[i];
+  }
+  let avr = sum / numbers.length;
+  console.log('Середнє арифметичне',avr);
+  //second
+  let max = Math.max(...numbers);
+  let min = Math.min(...numbers)
+  console.log('Найбільше значення',max)
+  console.log('Найменше значення',min)
+
+  let max2 = numbers[0];
+  let min2 = numbers[0];
+  for (let i = 0; i < numbers.length; i++) {
+    if (numbers[i] > max2) {
+      max2 = numbers[i];
+    }
+    if (numbers[i] < min2) {
+      min2 = numbers[i];
+    }
+  }
+  console.log('Найбільше значення',max2)
+  console.log('Найменше значення',min2)
+
+  numbers.sort(function (a, b){
+    return Number(a) - Number(b);
+  })
+  console.log('Відсортований масив:', numbers);
+
+</script>
+</body>
+</html>

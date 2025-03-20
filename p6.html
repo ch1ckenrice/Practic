@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    async function fetchWithTimeout(url, timeout) {
+        const fetchPromise = fetch(url);
+
+        const timeoutPromise = new Promise(function (resolve, reject) {
+            setTimeout(function () {
+                reject(new Error('timeout'));
+            }, timeout);
+        })
+        return Promise.race([timeoutPromise, fetchPromise]);
+    }
+    async function fetchData() {
+        const urls = [
+            'https://jsonplaceholder.typicode.com/posts/1',
+            'https://jsonplaceholder.typicode.com/users/1',
+        ];
+        const timeout = 2000;
+         const promises = urls.map(function (url){
+             return fetchWithTimeout(url, timeout);
+         });
+
+        const results = await Promise.allSettled(promises);
+
+        for (const result of results) {
+            if (result.status === 'rejected') {
+                if (result.reason.message === 'timeout') {
+                    return '408 Request timeout';
+                }
+            }
+        }
+        return results;
+    }
+    fetchData().then(function (data) {
+        console.log(data);
+    });
+</script>
+</body>
+</html>

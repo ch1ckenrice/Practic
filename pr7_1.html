@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <style>body {
+    font-family: sans-serif;
+    margin: 20px;
+  }
+
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+
+  .dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+  }
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 300px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    padding: 15px;
+  }
+
+  .dropdown-content form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .dropdown-content label {
+    margin-top: 8px;
+  }
+
+  .dropdown-content input,
+  .dropdown-content textarea {
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+
+  .dropdown-content button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 15px;
+  }
+
+  #notesList {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 20px;
+  }
+
+  #notesList li {
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    padding: 15px;
+    background-color: #f0f0f0;
+  }
+
+  #notesList h3 {
+    margin-top: 0;
+  }
+
+  #notesList p {
+    margin: 5px 0;
+  }
+
+  #notesList button {
+    background-color: #008CBA;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 5px;
+  }
+
+  #notesList button.editBtn {
+    background-color: #f0ad4e;
+  }
+
+  #notesList button.deleteBtn {
+    background-color: #d9534f;
+  }
+
+  #search,
+  #filter {
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+
+  #clearStorageBtn {
+    background-color: #d9534f;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+  }</style>
+</head>
+<body>
+<div class="dropdown" style="margin-top: 10px;">
+  <button id="addNoteBtn" class="dropbtn">Додати нотатку</button>
+  <div id="noteForm" class="dropdown-content">
+    <form id="noteFormSubmit">
+      <label for="title">Заголовок:</label><br>
+      <input type="text" id="title" name="title"><br>
+      <label for="category">Категорія:</label><br>
+      <input type="text" id="category" name="category"><br>
+      <label for="text">Текст:</label><br>
+      <textarea id="text" name="text"></textarea><br>
+      <button type="submit">Готово</button>
+    </form>
+  </div>
+</div>
+
+<input type="text" id="search" placeholder="Пошук...">
+<select id="filter">
+  <option value="">Всі категорії</option>
+</select>
+<button id="clearStorageBtn">Очистити сховище</button>
+
+<ul id="notesList"></ul>
+
+<script>
+  const addNoteBtn = document.getElementById('addNoteBtn');
+  const noteForm = document.getElementById('noteForm');
+  const noteFormSubmit = document.getElementById('noteFormSubmit');
+  const searchInput = document.getElementById('search');
+  const filterSelect = document.getElementById('filter');
+  const notesList = document.getElementById('notesList');
+  const clearStorageBtn = document.getElementById('clearStorageBtn');
+
+  let notes = JSON.parse(localStorage.getItem('notes')) || [];
+  let editingIndex = -1;
+
+  function RenderNotes() {
+    notesList.innerHTML = '';
+    const searchTerm = searchInput.value.toLowerCase();
+    const filterCategory = filterSelect.value;
+    notes.forEach((note, index) => {
+      if (
+              (note.title.toLowerCase().includes(searchTerm) || note.text.toLowerCase().includes(searchTerm)) &&
+              (filterCategory === '' || note.category === filterCategory)
+      ) {
+        const listItem = document.createElement('li');
+        listItem.innerHTML = `
+                <h3>${note.title} ${note.edited ? '<span style="color: #b15555;">(Змінено)</span>' : ''}</h3>
+                <p>${note.text}</p>
+                <p>Категорія: ${note.category}</p>
+                <button class='editBtn' data-index="${index}">Редагувати</button>
+                <button class='deleteBtn' data-index="${index}">Видалити</button>
+            `;
+        notesList.appendChild(listItem);
+      }
+    });
+    document.querySelectorAll('.editBtn').forEach((btn) => {
+      btn.addEventListener('click', (event) => {
+        const index = event.target.dataset.index;
+        editNote(index);
+
+      });
+    });
+    document.querySelectorAll('.deleteBtn').forEach((btn) => {
+      btn.addEventListener('click', (event) => {
+        const index = event.target.dataset.index;
+        deleteNote(index);
+      });
+    });
+  }
+
+  function populateCategories() {
+    const categories = [...new Set(notes.map(note => note.category))];
+    filterSelect.innerHTML = '<option value="">Всі категорії</option>';
+    categories.forEach((category) => {
+      const option = document.createElement('option');
+      option.value = category;
+      option.textContent = category;
+      filterSelect.appendChild(option);
+    });
+  }
+
+  function editNote(index) {
+    const note = notes[index];
+    document.getElementById('title').value = note.title;
+    document.getElementById('category').value = note.category;
+    document.getElementById('text').value = note.text;
+    noteForm.style.display = 'block';
+    editingIndex = index;
+
+  }
+
+  function deleteNote(index) {
+    notes.splice(index, 1);
+    localStorage.setItem('notes', JSON.stringify(notes));
+    RenderNotes();
+    populateCategories();
+  }
+  function addNote(note) {
+    notes.push(note);
+    localStorage.setItem('notes', JSON.stringify(notes));
+    RenderNotes();
+    populateCategories();
+  }
+
+  function submitNotes() {
+    const title = document.getElementById('title').value;
+    const category = document.getElementById('category').value;
+    const text = document.getElementById('text').value;
+
+    if (!title || !category || !text) {
+      alert('Будь ласка, введіть коректні значення у всі поля.');
+      return;
+    }
+
+    if (editingIndex !== -1) {
+      notes[editingIndex] = {
+        title: title,
+        category: category,
+        text: text,
+        edited: true,
+      };
+      editingIndex = -1;
+    } else {
+      addNote({
+        title: title,
+        category: category,
+        text: text,
+      });
+    }
+    localStorage.setItem('notes', JSON.stringify(notes));
+    RenderNotes();
+    document.getElementById('title').value = '';
+    document.getElementById('category').value = '';
+    document.getElementById('text').value = '';
+    noteForm.style.display = 'none';
+  }
+
+  addNoteBtn.addEventListener('click', (event) => {
+    noteForm.style.display = noteForm.style.display === 'none' ? 'block' : 'none';
+  });
+  document.addEventListener('click', function(event) {
+    if (noteForm.style.display === 'block' && !noteForm.contains(event.target) && event.target !== addNoteBtn) {
+      noteForm.style.display = 'none';
+    }
+  });
+
+  noteFormSubmit.addEventListener('submit', (event) => {
+    event.preventDefault();
+    submitNotes();
+  });
+
+  addNoteBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+
+  })
+
+  searchInput.addEventListener('input', RenderNotes);
+  filterSelect.addEventListener('change', RenderNotes);
+
+  clearStorageBtn.addEventListener('click', () => {
+    localStorage.clear();
+    notes = [];
+    RenderNotes();
+    populateCategories();
+  });
+
+  RenderNotes();
+  populateCategories();
+
+
+</script>
+</body>
+</html>
